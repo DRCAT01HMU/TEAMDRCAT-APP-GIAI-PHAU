@@ -701,11 +701,12 @@
                 // CHỐNG CRASH TỐI THƯỢNG CHO APPLE DEVICESS
                 const isAppleDevice = /Mac|iPod|iPhone|iPad/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
                 
+                closeBookDetail(); // Luôn đóng modal chi tiết
+                
                 if(isAppleDevice || window.innerWidth < 768) {
                     try { gtag('event', 'view_item_external', { 'item_name': book.title, 'app_name': 'Giải Phẫu iOS' }); } catch(e) {}
-                    window.open(book.url, '_blank');
+                    setTimeout(() => window.open(book.url, '_blank'), 100);
                 } else {
-                    closeBookDetail();
                     setTimeout(() => openPdfViewer(book.title, book.url), 300);
                 }
             };
@@ -738,15 +739,20 @@
             }
         };
 
-        // CHỐNG CHẾT NỀN KHI QUAY LẠI TỪ TAB KHÁC THEO CƠ CHẾ NATIVE SAFARI
-        document.addEventListener("visibilitychange", function() {
-            if (document.visibilityState === 'visible') {
-                const lib = document.getElementById('ebookLibrary');
-                if (lib && !lib.classList.contains('translate-y-full')) {
-                    toggleLibraryVideos(true);
-                }
+        // CHỐNG CHẾT NỀN KHI QUAY LẠI TỪ TAB KHÁC THEO CƠ CHẾ NATIVE SAFARI HOẶC PWA
+        const resumeLibraryBg = () => {
+            const lib = document.getElementById('ebookLibrary');
+            if (lib && !lib.classList.contains('translate-y-full')) {
+                const vid1 = document.getElementById('libraryBgVideo1');
+                const vid2 = document.getElementById('libraryBgVideo2');
+                if(vid1 && vid1.paused) { vid1.load(); }
+                if(vid2 && vid2.paused) { vid2.load(); }
+                setTimeout(() => toggleLibraryVideos(true), 150);
             }
-        });
+        };
+        document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') resumeLibraryBg(); });
+        window.addEventListener("focus", resumeLibraryBg);
+        window.addEventListener("pageshow", resumeLibraryBg);
 
         // Re-implement openEbookLibrary properly
         function openEbookLibrary() {
