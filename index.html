@@ -18,6 +18,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#0f172a' } } } }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" media="print" onload="this.media='all'">
     <style>
         * { -webkit-tap-highlight-color: transparent; outline: none; }
@@ -59,10 +62,10 @@
                 2px 4px 8px rgba(0,0,0,0.1);
         }
         .folder-shadow {
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08));
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
         }
         .dark .folder-shadow {
-            filter: drop-shadow(0 5px 12px rgba(0,0,0,0.4));
+            box-shadow: 0 5px 12px rgba(0,0,0,0.4);
         }
         @media (hover: none) {
             /* Tắt bóng đổ (Drop Shadow) nặng trên iPad/Mobile vì hệ điều hành gánh cực kỳ kém */
@@ -107,9 +110,6 @@
             mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
         }
     </style>
-    <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { primary: '#0f172a' } } } }
-    </script>
 
     <!-- AUTH LOGIC V4 -->
     <script>
