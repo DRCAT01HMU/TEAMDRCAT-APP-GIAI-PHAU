@@ -738,6 +738,16 @@
             }
         };
 
+        // CHỐNG CHẾT NỀN KHI QUAY LẠI TỪ TAB KHÁC THEO CƠ CHẾ NATIVE SAFARI
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === 'visible') {
+                const lib = document.getElementById('ebookLibrary');
+                if (lib && !lib.classList.contains('translate-y-full')) {
+                    toggleLibraryVideos(true);
+                }
+            }
+        });
+
         // Re-implement openEbookLibrary properly
         function openEbookLibrary() {
             try { gtag('event', 'open_library', { 'app_name': 'Giải Phẫu' }); } catch(e) {}
