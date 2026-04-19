@@ -779,6 +779,14 @@
             iframe.style.opacity = '0';
             if(loader) loader.style.opacity = '1';
             
+            // Tắt hoàn toàn render của các layer nền siêu nặng để chống Crash văng app trên iPhone
+            document.getElementById('ebookLibrary').style.display = 'none';
+            const btnFloat = document.getElementById('btnLibraryFloat');
+            if(btnFloat) btnFloat.style.display = 'none';
+            const vantaBg = document.getElementById('vanta-bg');
+            if(vantaBg) vantaBg.style.display = 'none';
+            document.body.style.backgroundColor = '#0f172a'; // dark background 
+            
             // Mở Modal (Cho animation chạy trước)
             viewer.classList.remove('hidden');
             // Trigger reflow
@@ -803,15 +811,25 @@
 
         function closePdfViewer() {
             const viewer = document.getElementById('pdfViewer');
-            viewer.classList.add('translate-y-full', 'opacity-0');
+            viewer.classList.replace('translate-y-0', 'translate-y-full');
+            viewer.classList.replace('opacity-100', 'opacity-0');
+            
+            // Bật lại các layer nền
+            document.getElementById('ebookLibrary').style.display = 'flex';
+            const btnFloat = document.getElementById('btnLibraryFloat');
+            if(btnFloat) btnFloat.style.display = 'flex';
+            const vantaBg = document.getElementById('vanta-bg');
+            if(vantaBg) vantaBg.style.display = 'block';
+            document.body.style.backgroundColor = '';
+
             document.body.style.overflow = 'auto';
             // Prevent RAM leakage by clearing iframe
             document.getElementById('pdfIframe').src = "about:blank";
             setTimeout(() => {
                 viewer.classList.add('hidden');
-                viewer.classList.remove('flex');
             }, 300);
         }
+
 
         const ALL_CASES = [
             {"url": "daicuonghetk.html", "title": "ĐẠI CƯƠNG HỆ THẦN KINH", "category": "Hệ Thần Kinh"},
@@ -1390,18 +1408,7 @@
         });
 
 
-        function closePdfViewer() {
-            // Slide down animation
-            pdfViewerModal.classList.add('opacity-0', 'translate-y-full');
-            
-            // Clear iframe immediately to save memory and stop processing
-            document.getElementById('pdfIframe').src = "about:blank";
-            
-            setTimeout(() => {
-                pdfViewerModal.classList.remove('flex');
-                pdfViewerModal.classList.add('hidden');
-            }, 300);
-        }
+
 
         /* -------------------------------------
            PREMIUM DRAG-TO-SCROLL (DESKTOP UX)
