@@ -745,9 +745,15 @@
             if (lib && !lib.classList.contains('translate-y-full')) {
                 const vid1 = document.getElementById('libraryBgVideo1');
                 const vid2 = document.getElementById('libraryBgVideo2');
-                if(vid1 && vid1.paused) { vid1.load(); }
-                if(vid2 && vid2.paused) { vid2.load(); }
-                setTimeout(() => toggleLibraryVideos(true), 150);
+                
+                // Safari iOS CSS Reflow Hack to force layout repaint and unlock video freezing
+                if(vid1) { vid1.style.display = 'none'; void vid1.offsetHeight; vid1.style.display = 'block'; }
+                if(vid2) { vid2.style.display = 'none'; void vid2.offsetHeight; vid2.style.display = 'block'; }
+                
+                setTimeout(() => toggleLibraryVideos(true), 50);
+                
+                // Kích thêm 1 lần nữa sau 1s để chắc chắn ăn
+                setTimeout(() => toggleLibraryVideos(true), 1000);
             }
         };
         document.addEventListener("visibilitychange", () => { if (document.visibilityState === 'visible') resumeLibraryBg(); });
