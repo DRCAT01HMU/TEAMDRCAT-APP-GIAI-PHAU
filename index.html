@@ -698,8 +698,16 @@
             
             const btn = document.getElementById('btnReadNow');
             btn.onclick = () => {
-                closeBookDetail();
-                setTimeout(() => openPdfViewer(book.title, book.url), 300);
+                // CHỐNG CRASH TỐI THƯỢNG CHO APPLE DEVICESS
+                const isAppleDevice = /Mac|iPod|iPhone|iPad/.test(navigator.platform) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+                
+                if(isAppleDevice || window.innerWidth < 768) {
+                    try { gtag('event', 'view_item_external', { 'item_name': book.title, 'app_name': 'Giải Phẫu iOS' }); } catch(e) {}
+                    window.open(book.url, '_blank');
+                } else {
+                    closeBookDetail();
+                    setTimeout(() => openPdfViewer(book.title, book.url), 300);
+                }
             };
         }
 
