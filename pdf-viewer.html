@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Sách PDF Siêu Tốc</title>
+    <!-- Thư viện PDF.js lõi -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; background-color: #1a1a1a; display: flex; flex-direction: column; height: 100vh; font-family: sans-serif; overflow: hidden; }
+        #toolbar { background-color: #2b2b2b; color: white; display: flex; align-items: center; justify-content: center; padding: 10px; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.5); z-index: 50; flex-shrink: 0;}
+        #toolbar button { background: #3b3b3b; color: white; border: 1px solid #555; border-radius: 8px; padding: 8px 16px; cursor: pointer; font-weight: bold; transition: 0.2s;}
+        #toolbar button:active { background: #555; transform: scale(0.95); }
+        #viewerContainer { flex-grow: 1; overflow: auto; display: flex; flex-direction: column; align-items: center; padding: 20px 0; background: #111; touch-action: pan-x pan-y;}
+        .page { margin-bottom: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.3); background: white; }
+        canvas { display: block; max-width: 100%; height: auto; }
+        #loading { color: #aaa; text-align: center; margin-top: 50px; font-size: 18px; }
+        .zoom-group { display: flex; gap: 5px; }
+    </style>
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1030830160852697"
+     crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="toolbar">
+        <button id="prevBtn">⬅ T.Trước</button>
+        <span id="pageCount" style="font-weight: 500; font-size: 14px;">1 / ?</span>
+        <button id="nextBtn">T.Sau ➡</button>
+        <div class="zoom-group">
+            <button id="zoomOut">➖</button>
+            <button id="zoomIn">➕</button>
+        </div>
+    </div>
+    <div id="viewerContainer">
+        <div id="loading">Đang tải cấu trúc sách (Siêu Mượt)...</div>
+        <div id="pdfRenderArea"></div>
+    </div>
+
+    <script>
+        // Setup worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js';
+
+        // Get file URL from querystring
+        const urlParams = new URLSearchParams(window.location.search);
+        let pdfUrl = urlParams.get('file');
+        
+        let pdfDoc = null;
+        let pageNum = 1;
+        let currentZoom = 1.0;
+        
+        // Detect mobile to auto-fit width
+        if(window.innerWidth < 768) {
+             currentZoom = (window.innerWidth - 20) / 600; // rough generic fit
+             if(currentZoom < 0.5) currentZoom = 0.5;
+        }
+
+        const renderArea = document.getElementById('pdfRenderArea');
+        
+        // Load PDF
+        if (pdfUrl) {
+            pdfjsLib.getDocument(pdfUrl).promise.then(pdf => {
+                pdfDoc = pdf;
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('pageCount').innerText = `1 / ${pdf.numPages}`;
+                renderPage(pageNum);
+            }).catch(err => {
+                document.getElementById('loading').innerText = "Không thể tải được file PDF. Vui lòng thử lại.";
+                console.error(err);
+            });
+        }
+
+        // Render specific page
+        function renderPage(num) {
+            pdfDoc.getPage(num).then(page => {
+                const viewport = page.getViewport({ scale: currentZoom });
+                
+                // create or reuse canvas
+                let canvas = document.getElementById('the-canvas');
+                if(!canvas) {
+                     canvas = document.createElement('canvas');
+                     canvas.id = 'the-canvas';
+                     canvas.className = 'page';
+                     renderArea.appendChild(canvas);
+                }
+                const ctx = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderContext = { canvasContext: ctx, viewport: viewport };
+                page.render(renderContext);
+                
+                document.getElementById('pageCount').innerText = `${num} / ${pdfDoc.numPages}`;
+            });
+        }
+
+        // Setup Controls
+        document.getElementById('prevBtn').onclick = () => { if (pageNum <= 1) return; pageNum--; renderPage(pageNum); };
+        document.getElementById('nextBtn').onclick = () => { if (pageNum >= pdfDoc.numPages) return; pageNum++; renderPage(pageNum); };
+        document.getElementById('zoomIn').onclick = () => { currentZoom += 0.2; renderPage(pageNum); };
+        document.getElementById('zoomOut').onclick = () => { currentZoom -= 0.2; renderPage(pageNum); };
+    </script>
+</body>
+</html>
