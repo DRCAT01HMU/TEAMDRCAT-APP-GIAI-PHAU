@@ -114,10 +114,22 @@
     <!-- AUTH LOGIC V4 -->
     <script>
         const AUTH_API = "https://script.google.com/macros/s/AKfycbzUNA96SRsLQv7hlu83GAx6L85kEia8S52KY7nCRfWLlpJslMAT_Z-n9PMOoG_RNW6Q/exec";
+        
+        function generateValidSegment() {
+            var seg = Math.random().toString(36).substring(2, 6).toUpperCase();
+            while (seg.length < 4) {
+                seg += Math.floor(Math.random() * 10).toString();
+            }
+            return seg.substring(0, 4);
+        }
+
         let deviceId = localStorage.getItem('TDC_DEVICE_ID_GIAIPHAU');
-        if (!deviceId) {
-            deviceId = "TDC-" + Math.random().toString(36).substring(2, 6).toUpperCase() + "-" + Math.random().toString(36).substring(2, 6).toUpperCase();
+        var idPattern = /^TDC-[A-Z0-9]{4}-[A-Z0-9]{4}$/;
+        
+        if (!deviceId || !idPattern.test(deviceId)) {
+            deviceId = "TDC-" + generateValidSegment() + "-" + generateValidSegment();
             localStorage.setItem('TDC_DEVICE_ID_GIAIPHAU', deviceId);
+            localStorage.removeItem('TDC_APPROVED_GIAIPHAU');
         }
 
         function checkAuth() {
