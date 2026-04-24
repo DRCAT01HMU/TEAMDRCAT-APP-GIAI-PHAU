@@ -489,29 +489,10 @@
                                 <div class="absolute -inset-0.5 bg-gradient-to-r from-rose-500 to-purple-600 rounded-2xl blur opacity-30 group-hover:opacity-80 transition duration-500 pointer-events-none"></div>
                                 
                                 <!-- 16:9 Aspect Ratio Container -->
-                                <div class="relative w-full aspect-video z-10 rounded-xl overflow-hidden bg-slate-900 transition-transform duration-300">
+                                <div class="relative w-full aspect-video z-10 rounded-xl overflow-hidden bg-slate-900 transition-transform duration-300 border border-white/10 shadow-inner">
                                     
-                                    <!-- Autoplay YouTube iframe (Bản chuẩn) -->
-                                    <iframe class="absolute inset-0 w-full h-full border-0 pointer-events-none scale-[1.15]" src="https://www.youtube.com/embed/1kaZwLJ9Dok?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=1kaZwLJ9Dok&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-                                    
-                                    <!-- Overlay to prevent clicks and add styling -->
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none z-10"></div>
-                                    
-                                    <!-- Top badge -->
-                                    <div class="absolute top-3 left-3 z-20 pointer-events-none">
-                                        <div class="bg-black/60 backdrop-blur-sm border border-white/20 px-3 py-1.5 rounded-lg flex items-center gap-2 shadow-lg">
-                                            <i class="fas fa-headphones text-rose-500 text-sm animate-pulse"></i>
-                                            <span class="text-white text-[10px] sm:text-[11px] font-bold tracking-widest uppercase">Động Lực Học Tập</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Bottom Info -->
-                                    <div class="absolute bottom-3 left-4 right-4 flex items-center justify-between z-20 pointer-events-none">
-                                        <div class="pr-4">
-                                            <h3 class="text-white font-bold text-[13px] sm:text-base drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] line-clamp-1 text-rose-300">Hãy kiên trì, thành công sẽ đến!</h3>
-                                            <p class="text-white/80 text-[10px] sm:text-xs mt-1 flex items-center gap-1.5 font-medium"><i class="fas fa-heart text-[9px] text-rose-400"></i> Lofi Study Animation</p>
-                                        </div>
-                                    </div>
+                                    <!-- YouTube iframe có âm thanh và thanh điều khiển -->
+                                    <iframe class="absolute inset-0 w-full h-full border-0" src="https://www.youtube.com/embed/1kaZwLJ9Dok?autoplay=1&mute=0&controls=1&showinfo=0&rel=0&loop=1&playlist=1kaZwLJ9Dok&modestbranding=1&playsinline=1" allow="autoplay; encrypted-media" allowfullscreen></iframe>
                                 </div>
                             </div>
                         </div>
