@@ -1350,7 +1350,7 @@
                 const animDelay = (visibleCount * 0.05) + 's';
                 
                 html += `
-                <a href="${caseItem.url}" onclick="try { gtag('event', 'select_content', { 'content_type': 'anatomy_test', 'item_name': '${caseItem.title.replace(/'/g, "\\'")}', 'app_name': 'Giải Phẫu' }); } catch(e){}" class="card-anim block group relative bg-white dark:bg-slate-900 rounded-[24px] p-5 shadow-sm  transition-shadow duration-300 border border-slate-200/50 dark:border-slate-800 overflow-hidden" style="animation-delay: ${animDelay}">
+                <a href="${caseItem.url}" target="_blank" onclick="try { gtag('event', 'select_content', { 'content_type': 'anatomy_test', 'item_name': '${caseItem.title.replace(/'/g, "\\'")}', 'app_name': 'Giải Phẫu' }); } catch(e){}" class="card-anim block group relative bg-white dark:bg-slate-900 rounded-[24px] p-5 shadow-sm  transition-shadow duration-300 border border-slate-200/50 dark:border-slate-800 overflow-hidden" style="animation-delay: ${animDelay}">
                     ${isCompleted ? '<div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-emerald-500/20 to-transparent flex items-start justify-end rounded-tr-[24px]"><i class="fas fa-check text-emerald-500 p-3 pr-4 text-lg"></i></div>' : ''}
                     <div class="relative flex items-center justify-between z-10">
                         <div class="flex items-center gap-4">
