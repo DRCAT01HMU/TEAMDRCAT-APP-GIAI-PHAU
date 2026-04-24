@@ -662,7 +662,34 @@
         </div>
     </div>
 
+    <!-- QUIZ VIEWER MODAL -->
+    <div id="quizViewer" class="fixed inset-0 z-[100] bg-black/40 hidden flex-col transition-all duration-300 translate-y-full opacity-0 select-none" style="-webkit-touch-callout: none; -webkit-tap-highlight-color: transparent;">
+        <div class="flex-none bg-transparent px-3 py-1.5 sm:py-2 flex items-center justify-between pt-safe z-20">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-md bg-blue-600/80 flex items-center justify-center shadow-inner border border-blue-400/30">
+                    <i class="fas fa-laptop-medical text-white text-[10px]"></i>
+                </div>
+                <h3 id="quizTitle" class="text-slate-100 font-bold text-[11px] sm:text-xs tracking-widest uppercase line-clamp-1 drop-shadow-sm">Bài Test</h3>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="closeQuizViewer()" class="px-3 py-1 bg-white/10 hover:bg-red-500/80 text-white rounded-md text-[10px] font-black transition-all cursor-pointer border border-white/10 hover:border-red-400/50 shadow-sm uppercase tracking-widest flex items-center gap-1.5 active:scale-95">
+                    <i class="fas fa-times"></i> Đóng Test
+                </button>
+            </div>
+        </div>
+        <div class="w-full relative mx-auto flex-1 z-10 overflow-hidden block bg-slate-50 dark:bg-slate-950">
+            <iframe id="quizIframe" src="" class="absolute inset-0 w-full h-full border-0 z-10" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <script>
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.action === 'closeQuiz') {
+                if (typeof closeQuizViewer === 'function') {
+                    closeQuizViewer();
+                }
+            }
+        });
 
         
         function renderEbooks() {
@@ -923,6 +950,39 @@
                 viewer.classList.add('hidden');
             }, 300);
         }
+
+        function openQuizViewer(url, title) {
+            try { gtag('event', 'view_item', { 'item_name': title || 'Quiz', 'app_name': 'Giải Phẫu' }); } catch(e) {}
+            const viewer = document.getElementById('quizViewer');
+            const iframe = document.getElementById('quizIframe');
+            
+            document.getElementById('quizTitle').innerText = title || "Bài Test";
+            
+            iframe.src = 'about:blank';
+            viewer.classList.remove('hidden');
+            viewer.classList.add('flex');
+            void viewer.offsetWidth;
+            viewer.classList.replace('translate-y-full', 'translate-y-0');
+            viewer.classList.replace('opacity-0', 'opacity-100');
+            document.body.style.overflow = 'hidden';
+            
+            setTimeout(() => {
+                iframe.src = url;
+            }, 300);
+        }
+
+        window.closeQuizViewer = function() {
+            const viewer = document.getElementById('quizViewer');
+            viewer.classList.replace('translate-y-0', 'translate-y-full');
+            viewer.classList.replace('opacity-100', 'opacity-0');
+            
+            document.body.style.overflow = 'auto';
+            document.getElementById('quizIframe').src = "about:blank";
+            setTimeout(() => {
+                viewer.classList.remove('flex');
+                viewer.classList.add('hidden');
+            }, 300);
+        };
 
 
         const ALL_CASES = [
@@ -1350,7 +1410,7 @@
                 const animDelay = (visibleCount * 0.05) + 's';
                 
                 html += `
-                <a href="${caseItem.url}" target="_blank" onclick="try { gtag('event', 'select_content', { 'content_type': 'anatomy_test', 'item_name': '${caseItem.title.replace(/'/g, "\\'")}', 'app_name': 'Giải Phẫu' }); } catch(e){}" class="card-anim block group relative bg-white dark:bg-slate-900 rounded-[24px] p-5 shadow-sm  transition-shadow duration-300 border border-slate-200/50 dark:border-slate-800 overflow-hidden" style="animation-delay: ${animDelay}">
+                <a href="javascript:void(0)" onclick="openQuizViewer('${caseItem.url}', '${caseItem.title.replace(/'/g, "\\'")}'); try { gtag('event', 'select_content', { 'content_type': 'anatomy_test', 'item_name': '${caseItem.title.replace(/'/g, "\\'")}', 'app_name': 'Giải Phẫu' }); } catch(e){}" class="card-anim block group relative bg-white dark:bg-slate-900 rounded-[24px] p-5 shadow-sm  transition-shadow duration-300 border border-slate-200/50 dark:border-slate-800 overflow-hidden" style="animation-delay: ${animDelay}">
                     ${isCompleted ? '<div class="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-emerald-500/20 to-transparent flex items-start justify-end rounded-tr-[24px]"><i class="fas fa-check text-emerald-500 p-3 pr-4 text-lg"></i></div>' : ''}
                     <div class="relative flex items-center justify-between z-10">
                         <div class="flex items-center gap-4">
