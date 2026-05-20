@@ -303,6 +303,10 @@ function parseQuizData(text) {
         const isAns = line.match(/^(?:Đáp án(?: đúng)?|Answer)\s*[:\.\-]?\s*([A-E])/i);
 
         if (isCaseStart && !isQ) {
+            if (currentMode === 'question') {
+                currentQ.question += (currentQ.question ? '\n' : '') + line;
+                return;
+            }
             currentContext = line + '\n';
             isBuildingContext = true;
             currentMode = 'context';
@@ -331,7 +335,7 @@ function parseQuizData(text) {
             return;
         }
         
-        if (line.match(/^(Giải thích|Tại sao các lựa chọn khác|Tài liệu được biên soạn|Nghiêm cấm sao chép|Đúng:|Sai:)/i)) {
+        if (line.match(/^(Giải thích|Tại sao các lựa chọn khác|Tài liệu được biên soạn|Nghiêm cấm sao chép|Đúng:|Sai:|Đáp án và Giải thích)/i)) {
             currentMode = 'skip';
             return;
         }
